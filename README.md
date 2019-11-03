@@ -82,7 +82,7 @@ Why choose Apache Benchmark (ab) and Python Locust to do the performance test?
  - Influxdb + Grafana dashboard
 
 In my opinion, web UI console is timeseries based which means you will missing some data if run load testing for serveral hours due to it does not make sense for keeping browser for long period.
- - I did the survey and come out the solution is that flush statistic result into timeseries db (influxdb) and use grafana dashboard to query and show it.
+ - I did the survey and come out the solution is that create another worker to flush statistic result into timeseries db (influxdb) and use grafana dashboard to query and show it.
 
 ## Screenshot of test result for this demo project
  - You can reference folder "result_screenshot_example" for CI test result
@@ -90,8 +90,9 @@ In my opinion, web UI console is timeseries based which means you will missing s
     - build_fail_with_log: it shows if pipeline build fail and you can check the log from jenkins console and as well as can be received some message from pipeline script
 
 ## Result for load testing 
- Result : RPS is 178 (Hit total 500 request and finish in 2.8 sec, max response time would be 160 ms)
- - ab test
+ AB test
+ - max RPS is 178 (only for query api)
+ - Hit total 500 request and finish in 2.8 sec, max response time would be 160 ms)
  ```bash
 10:04:00 laybow_kuo ~ $ ab -n 500 -c 20 http://127.0.0.1:8000/mendix-demo/v1/test123/query
 This is ApacheBench, Version 2.3 <$Revision: 1826891 $>
@@ -143,3 +144,33 @@ Percentage of the requests served within a certain time (ms)
   99%    133
  100%    160 (longest request)
  ```
+
+Locust Test 
+-
+```bash
+10:52:47 laybow_kuo ~/Documents/laybow_mendix/locust-load-testing/perf_script/mendix-demo $ locust -f locustfile.py -c 100 -r 0.1 -t 1m --no-web
+[2019-11-03 10:52:48,978] T-01002306ML-2.local/INFO/locust.main: Run time limit set to 60 seconds
+[2019-11-03 10:52:48,978] T-01002306ML-2.local/INFO/locust.main: Starting Locust 0.11.0
+[2019-11-03 10:52:48,978] T-01002306ML-2.local/INFO/locust.runners: Hatching and swarming 100 clients at the rate 0.1 clients/s...
+
+....
+
+[2019-11-03 10:53:48,833] T-01002306ML-2.local/INFO/locust.main: Time limit reached. Stopping Locust.
+[2019-11-03 10:53:48,834] T-01002306ML-2.local/INFO/locust.main: Shutting down (exit code 0), bye.
+[2019-11-03 10:53:48,834] T-01002306ML-2.local/INFO/locust.main: Cleaning up runner...
+[2019-11-03 10:53:48,839] T-01002306ML-2.local/INFO/locust.main: Running teardowns...
+ Name                                                          # reqs      # fails     Avg     Min     Max  |  Median   req/s
+--------------------------------------------------------------------------------------------------------------------------------------------
+ GET /mendix-demo/v1/a5166aab-7764-433a-8e83-2035b065a45b/query    3426     0(0.00%)      44      14     159  |      41   61.50
+ POST /mendix-demo/v1/user/status                                1819     0(0.00%)      29       8     121  |      26   35.50
+--------------------------------------------------------------------------------------------------------------------------------------------
+ Total                                                           5245     0(0.00%)                                      97.00
+
+Percentage of the requests completed within given times
+ Name                                                           # reqs    50%    66%    75%    80%    90%    95%    98%    99%   100%
+--------------------------------------------------------------------------------------------------------------------------------------------
+ GET /mendix-demo/v1/a5166aab-7764-433a-8e83-2035b065a45b/query     3426     41     50     57     61     73     86     98    110    160
+ POST /mendix-demo/v1/user/status                                 1819     26     33     38     42     52     60     72     78    120
+--------------------------------------------------------------------------------------------------------------------------------------------
+ Total                                                            5245     35     45     52     56     67     78     92    100    160
+```
