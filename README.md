@@ -90,11 +90,10 @@ In my opinion, web UI console is timeseries based which means you will missing s
     - build_fail_with_log: it shows if pipeline build fail and you can check the log from jenkins console and as well as can be received some message from pipeline script
 
 ## Result for load testing 
+ Result : RPS is 178 (Hit total 500 request and finish in 2.8 sec, max response time would be 160 ms)
  - ab test
  ```bash
-    10:04:00 laybow_kuo ~ $ ab -n 500 -c 20 http://127.0.0.1:8000/mendix-demo/v1/test123/query
- ```
- ```js
+10:04:00 laybow_kuo ~ $ ab -n 500 -c 20 http://127.0.0.1:8000/mendix-demo/v1/test123/query
 This is ApacheBench, Version 2.3 <$Revision: 1826891 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
 Licensed to The Apache Software Foundation, http://www.apache.org/
@@ -117,36 +116,6 @@ Document Length:        122 bytes
 
 Concurrency Level:      20
 Time taken for tests:   2.804 seconds
-Complete requests:      500
-Failed requests:        0
-Total transferred:      134500 bytes
-HTML transferred:       61000 bytes
-Requests per second:    178.34 [#/sec] (mean)
-Time per request:       112.148 [ms] (mean)
-Time per request:       5.607 [ms] (mean, across all concurrent requests)
-Transfer rate:          46.85 [Kbytes/sec] received
-
-Connection Times (ms)
-              min  mean[+/-sd] median   max
-Connect:        0    0   0.1      0       1
-Processing:     8  108  14.2    109     160
-Waiting:        8  107  14.0    107     154
-Total:          9  108  14.1    109     160
-
-Percentage of the requests served within a certain time (ms)
-  50%    109
-  66%    113
-  75%    116
-  80%    118
-  90%    122
-  95%    126
-  98%    130
-  99%    133
- 100%    160 (longest request)
-10:04:13 laybow_kuo ~ $
-10:04:30 laybow_kuo ~ $ Concurrency Level:      20
--bash: Concurrency: command not found
-10:04:30 laybow_kuo ~ $ Time taken for tests:   2.804 seconds
 Complete requests:      500
 Failed requests:        0
 Total transferred:      134500 bytes
