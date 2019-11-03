@@ -1,6 +1,6 @@
-# In this demo project, there are several folder as below
+## In this demo project, there are several folder as below
  - demo-service: the microservice that simulate store user behavior data
-    - skill : flask + uwsgi + ngingx + influxdb 
+    - skill : flask + uwsgi + ngingx + influxdb + RESTful API design
  - locust-load-testing: run for performance test
     - skill : locust + influx + grafana
  - testcase: implement test script to test demo-service incluse functional and integration
@@ -10,7 +10,7 @@
  - jenkins_pipeline.groovy: CI process for deploy and test
     - skill : jenkins pipeline + groovy
 
-# Task 1 Scenario and Explanation (Build up jenkins pipeline to deploy and test for microservice)
+## Task 1 Scenario and Explanation (Build up jenkins pipeline to deploy and test for microservice)
 
 ### Demo-Service Spec
  - User Story 1: user can send behavior data to servie such as user love/like/angy/cry for specific article in specific time
@@ -42,7 +42,8 @@ There are several steps in CI/CD progress for constructing pipeline.
  7. Archive build/test reulst for debug if any 
  8. Send build result to somewhere 
 
-# Task 2 Scenario and Explanation (Evaluation of the microservice RPS, RESTful API based service)
+## Task 2 Scenario and Explanation
+Evaluation for the microservice capacity which is RESTful API based service
 
 ### What the purpose is for performance test (load testing)?
  1. Evaluate the service capacity that how many RPS can be taken (Maximum RPS for single microservice with resource limitataion)
@@ -55,6 +56,12 @@ There are several steps in CI/CD progress for constructing pipeline.
 ### For this task, why I choose Apache Benchmark (ab) and Python Locust to do the performance test?
  1. Apache Benchmark Testing (https://httpd.apache.org/docs/2.4/programs/ab.html)
     - It is a tool for benchmarking your RESTful service
-    - It can quickly attack the api with High RPS and check service status
- - Simulate thousands of concurrent users on a single machine. (cost concern)
- - 
+    - It can quickly hit the api with High RPS and check service status
+ 2. Python locust
+    - Simulate thousands of concurrent users on a single machine. (cost concern)
+    - 
+
+## Screenshot of test result for this demo project
+ - You can reference folder "result_screenshot_example" for CI test result
+    - build_success.png: it output with pipeline script with success tesult and of course that I have to comment out some code snippets only left stage description for concept and flow description. 
+    - build_fail_with_log: it shows if pipeline build fail and you can check the log from jenkins console and as well as can be received some message from pipeline script
