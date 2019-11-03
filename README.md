@@ -31,7 +31,7 @@ Here does not eloborate all spec for test cases, only demo how to write test scr
  - Assume there is Dockerfile in microservice which implement by developer or sdet
  - Assume test is test script for testing service quality implement by sdet
  - Build up auto CI/CD for release microservice include deploying and testing
-    - It will auto publish docker image to somewhere if build and test pass in CI/CD flow
+    - it will auto publish docker image to somewhere if build and test pass in CI/CD flow
 
 ### CI Steps Explanation:
 There are several steps in CI/CD progress for constructing pipeline.
@@ -50,44 +50,44 @@ Evaluation for the microservice capacity which is RESTful API based service
 ### What the purpose is for performance test (load testing)?
  1. Evaluate the service capacity that how many RPS can be taken (Maximum RPS for single microservice with resource limitataion)
  2. Evaluate the service stablity under high RPS condition for specific long periods (should be more than 3 hours)
-    - In my experience, sometimes service will get memory leak issue due to code does not handle memory GC or DB connection well under high RPS condition.
+    - in my experience, sometimes service will get memory leak issue due to code does not handle memory GC or DB connection well under high RPS condition.
  3. Provide the test result with maximum RPS can benefit teams that OPS and PM/PO make some  decision or strategy with strong evidence
-    - Operation team will know how many containers should be launched at the sametime on production environment
-    - Project Manager/Product owner wil know it can be fulfill the requirement (real online user traffic)
+    - operation team will know how many containers should be launched at the sametime on production environment
+    - project manager/product owner wil know it can be fulfill the requirement (real online user traffic)
 
 ### Load Testing Tool
 Why choose Apache Benchmark (ab) and Python Locust to do the performance test?
  1. Apache Benchmark Testing (https://httpd.apache.org/docs/2.4/programs/ab.html)
-    - It is a tool for benchmarking your RESTful service
-    - It can quickly hit the api with High RPS and check service status
-        - Only for quickly test single api with high RPS
+    - it is a tool for benchmarking your RESTful service
+    - it can quickly hit the api with High RPS and check service status
+        - only for quickly test single api with high RPS
  2. Python Locust (https://locust.io/)
-    - It can simulate thousands of concurrent users on a single machine. (cost concern)
-    - It write very expressive scenarios as user behavior to access your service
-    - Support distributed mode which is master and slave architect. It can easy setup load generator with high RPS without extra effort
-    - Support multi protocol load testing such as RESTful and gRPC (https://grpc.io/) protocol
+    - it can simulate thousands of concurrent users on a single machine. (cost concern)
+    - it write very expressive scenarios as user behavior to access your service
+    - support distributed mode which is master and slave architect. It can easy setup load generator with high RPS without extra effort
+    - support multi protocol load testing such as RESTful and gRPC (https://grpc.io/) protocol
 
 ### Task Scenario
  - Assume target RPS is 500 and need to complete in 10 mins
-    - In demo-service, assume the api ratio is 1 for store user behavoir but 2 is for query non-exist data (just for demo)
+    - in demo-service, assume the api ratio is 1 for store user behavoir but 2 is for query non-exist data (just for demo)
  - Load testing for check service capacity and stablity
  - System status monitor such as CPU / Memory / Disk
 
 ### Test Script
 Check "locustfile.py" file in locust-load-testing folder and path is /perf_script/mendix-demo
  - Apply locust framework
-    - Impelement classe for HttpLocust, TaskSet, task, Locust
+    - impelement and inheritance of serveral class ex: HttpLocust, TaskSet, task, Locust
  - Simply to write the test scenario as user behavior 
-    - Store user behavior data
-    - Query user behavior data
+    - store user behavior data
+    - query user behavior data
 
 ### Setup performance environment 
  - Locust distributed mode
-    - Deploy one master and ten slave node to simulate total count request count is 500 
-        - Check deploy.sh and README.md in locust-load-testing folder for more detail 
-    - Open locust web console to check Performance test reult such as RPS / response time ..etc
+    - deploy one master and ten slave node to simulate total count request count is 500 
+        - check deploy.sh and README.md in locust-load-testing folder for more detail 
+    - open locust web console to check Performance test reult such as RPS / response time ..etc
  - System status
-    - Install telegraf + influxdb then it will auto output system information into fluxdb and can be present by grafana dashboard
+    - install telegraf + influxdb then it will auto output system information into fluxdb and can be present by grafana dashboard
 
 In my experience, web UI console is timeseries based which means you will missing some data if run load testing for serveral hours due to it does not make sense for keeping browser for long period.
  - I did the survey and come out the solution was that create another worker to flush statistic result into timeseries db (influxdb) and use grafana dashboard to query and show it.
@@ -98,19 +98,18 @@ In my experience, web UI console is timeseries based which means you will missin
  BTW, if you are very interested in how to setup for this part I can show you in the interview if time is possible.
 
 ## Screenshot of test result for demo project
- - You can reference folder "result_screenshot_example" for CI test result
+ - You can reference folder "result_screenshot_example" for CI and Peformance test result
     - build_success.png: it output with pipeline script with success tesult and of course that I have to comment out some code snippets only left stage description for concept and flow description. 
     - build_fail_with_log.png: it shows if pipeline build fail and you can check the log from jenkins console and as well as can be received some message from pipeline script
+    - locust_xxx.png: recent load testing project that againist gRPC microservices.
 
 ## Result for load testing (Using local to do peformance test)
+RPS could be got more high with deploy it on AWS instance instead of on local machine.
  AB test
  - Max RPS is 178 (only for query api)
  - Hit total 500 request and finish in 2.8 sec, max response time would be 160 ms)
  ```bash
 10:04:00 laybow_kuo ~ $ ab -n 500 -c 20 http://127.0.0.1:8000/mendix-demo/v1/test123/query
-This is ApacheBench, Version 2.3 <$Revision: 1826891 $>
-Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
-Licensed to The Apache Software Foundation, http://www.apache.org/
 
 Benchmarking 127.0.0.1 (be patient)
 Completed 100 requests
