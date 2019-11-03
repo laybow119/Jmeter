@@ -69,29 +69,42 @@ Why choose Apache Benchmark (ab) and Python Locust to do the performance test?
 
 ### Task Scenario
  - Assume target RPS is 500 and need to complete in 10 mins
-    - In demo-service, assume the api ratio is 10 for store and query user behavoir but 1 is for query non-exist data
+    - In demo-service, assume the api ratio is 1 for store user behavoir but 2 is for query non-exist data (just for demo)
  - Load testing for check service capacity and stablity
  - System status monitor such as CPU / Memory / Disk
+ 
+### Test Script
+Check "locustfile.py" file in locust-load-testing folder and path is /perf_script/mendix-demo
+ - Apply locust framework
+    - Impelement classe for HttpLocust, TaskSet, task, Locust
+ - Simply to write the test scenario as user behavior 
+    - Store user behavior data
+    - Query user behavior data
 
-### Setup performance environment
+### Setup performance environment 
  - Locust distributed mode
     - Deploy one master and ten slave node to simulate total count request count is 500 
+        - Check deploy.sh and README.md in locust-load-testing folder for more detail 
     - Open locust web console to check Performance test reult such as RPS / response time ..etc
  - System status
     - Install telegraf + influxdb then it will auto output system information into fluxdb and can be present by grafana dashboard
- - Influxdb + Grafana dashboard
 
-In my opinion, web UI console is timeseries based which means you will missing some data if run load testing for serveral hours due to it does not make sense for keeping browser for long period.
- - I did the survey and come out the solution is that create another worker to flush statistic result into timeseries db (influxdb) and use grafana dashboard to query and show it.
+In my experience, web UI console is timeseries based which means you will missing some data if run load testing for serveral hours due to it does not make sense for keeping browser for long period.
+ - I did the survey and come out the solution was that create another worker to flush statistic result into timeseries db (influxdb) and use grafana dashboard to query and show it.
 
-## Screenshot of test result for this demo project
+ In this task, I did not really use distributed mode as testing frmework since the RPS is quite low. I only use local for test but I will give some screenshot as evidence for above desicription
+ - The screenshot has been taken in my recent project that load testing againist RESTful and gRPC micro service and also wrote the wiki for guide other SDET member how to use it
+
+ BTW, if you are very interested in how to setup for this part I can show you in the interview if time is possible.
+
+## Screenshot of test result for demo project
  - You can reference folder "result_screenshot_example" for CI test result
     - build_success.png: it output with pipeline script with success tesult and of course that I have to comment out some code snippets only left stage description for concept and flow description. 
     - build_fail_with_log: it shows if pipeline build fail and you can check the log from jenkins console and as well as can be received some message from pipeline script
 
-## Result for load testing 
+## Result for load testing (Using local to do peformance test)
  AB test
- - max RPS is 178 (only for query api)
+ - Max RPS is 178 (only for query api)
  - Hit total 500 request and finish in 2.8 sec, max response time would be 160 ms)
  ```bash
 10:04:00 laybow_kuo ~ $ ab -n 500 -c 20 http://127.0.0.1:8000/mendix-demo/v1/test123/query
@@ -106,7 +119,6 @@ Completed 300 requests
 Completed 400 requests
 Completed 500 requests
 Finished 500 requests
-
 
 Server Software:        Werkzeug/0.16.0
 Server Hostname:        127.0.0.1
@@ -146,7 +158,10 @@ Percentage of the requests served within a certain time (ms)
  ```
 
 Locust Test 
--
+- Max RPS is 97 (For both store and query api)
+    - Store user behavior data
+    - Query user behavior data
+- Simulate 100 users and hatching rate in 0.1, total request is 5245 in 1m
 ```bash
 10:52:47 laybow_kuo ~/Documents/laybow_mendix/locust-load-testing/perf_script/mendix-demo $ locust -f locustfile.py -c 100 -r 0.1 -t 1m --no-web
 [2019-11-03 10:52:48,978] T-01002306ML-2.local/INFO/locust.main: Run time limit set to 60 seconds
