@@ -14,8 +14,8 @@
 Build up jenkins pipeline to deploy and test for microservice
 
 ### Demo-Service Spec
- - User Story 1: user can send behavior data to servie such as user love/like/angy/cry for specific article in specific time
- - User Story 2: user can query behavior data in service, for example: it can show how many articles that user likes it. 
+ - User Story 1: user can send behavior data to servie such as user love/like/angy/cry for specific article in a specific time
+ - User Story 2: user can query behavior data from service, for example: it can show how many articles that user likes it. 
 
 ### Prepared Test Script
 Here does not eloborate all aspect of test cases, only demo how to write test script
@@ -26,23 +26,22 @@ Here does not eloborate all aspect of test cases, only demo how to write test sc
     - user store its realtime behavior and can be retrieved
     - user store different behavior several times at different timing and it can be queried with all records based on specific status
 
-### Task Scenario
- - Assume if code submitted/merged by developer this CI/CD flow will be automaticially trigger
+### Task Assumptions
+ - Assume this CI/CD flow will be automaticially trigger if code submitted/merged by developer 
  - Assume there is "Dockerfile" for build up microservices which implement by developer or sdet
  - Assume there is test script for testing service quality implement by sdet
- - Build up auto CI/CD for release microservice include of deploying and testing
-    - it will auto publish docker image to somewhere if build and test pass in CI/CD flow
+ - Assume there is output folder where store build result or debug log
 
 ### CI Steps Explanation:
 There are several steps in CI/CD progress for constructing pipeline.
  1. Git sync from code repository
  2. Build up microservice based on Dockerfile
  3. Deploy service to QA/Local environment
- 4. Run test parallelly (This project only has master node, not multiple nodes)
+ 4. Run test parallelly (Ideally to run parallelly but for demo only has master node)
  5. Push image to private docker registry
- 6. Clean up temporary docker image file to avoid issue of no space left on disk 
- 7. Archive build/test reulst for debug if any 
- 8. Send build result whcih to somewhere 
+ 6. Clean up temporary docker image file (avoid disk issue of no space left) 
+ 7. Archive build/test reulst to artifacts on jenkins 
+ 8. Send notification of build result to somewhere such as collaboration channel of team
 
 ## Task 2 Brief Description
 Evaluation for the microservice capacity which is RESTful API based service
