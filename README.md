@@ -239,12 +239,11 @@ Percentage of the requests completed within given times
 
 ## Conclusion for performance test
 You will find the max RPS is not the same between ab and locust tool
- - ab only test get API while locust test both store and query
- - ifra implement and design mindset is different
+ - ab only can test one API for one process while locust test both store and query
+ - ifra implement and design model is different
     - ab : hit total request you desired and set concurrency number
     - locust: hit in specific periods and concurrency user count you desired with hatch rate (rps should be incremented while user count increase)
-        - if use distributed mode then can get more high RPS
 
-In generally, ab is only for quickly check service performance while locust is more suite for load testing. 
+In generally, ab is only for quickly check service performance while locust is more suite for load testing of multiple api. 
 
-ps. Jmeter will consume too many CPU/Memory IO when did the load generator and you have to set up more instances or container if you desired to hit high RPS (I was also familiar with Jmeter)
+ps. Why do not select Jmeter due to it consume too many CPU/Memory IO when launch the load generator and you have to set up more instances or container if you desired to hit high RPS (I was also familiar with Jmeter script)
