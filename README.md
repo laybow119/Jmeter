@@ -56,16 +56,17 @@ There are several steps in CI/CD progress for constructing pipeline.
 Evaluation for the microservice capacity
 
 ### Task Spec
-Check capacity is expected the hit total request count to 500 and completing 400 in 10 mins (RPS should be less than 1) 
+Check capacity is expected the hit total request count to 500 and completing 400 in 10 mins 
+ - RPS should be less than 1
 
 ### What purpose stands for performance test (load testing)?
- 1. Evaluate the service capacity that how many Request Per Seconnd (RPS) can be taken against microservice 
+ - Evaluate the service capacity that how many Request Per Seconnd (RPS) can be taken against microservice 
    - maximum RPS for single container with resource limitataion when deployed
- 2. Check the response time for a request is acceptable (user acceptance)
+ - Check the response time for a request is acceptable (user acceptance)
    - the response time shoule be less than 10 seconds under high RPS
- 3. Evaluate the service stablity under high RPS condition for specific long periods (should be more than 3 hours)
+ - Evaluate the service stablity under high RPS condition for specific long periods (should be more than 3 hours)
     - in my experience, sometimes service will get memory leak issue due to code does not handle memory GC or DB connection well under high RPS condition.
- 4. Provide the test result of maximum RPS can benefit team that OPS and PM/PO can make some decision or strategy with strong evidence
+ - Provide the test result of maximum RPS can benefit team that OPS and PM/PO can make some decision or strategy with strong evidence
     - operation team will know how many containers should be launched at the sametime on production environment against the target RPS
     - project manager or product owner will know it can be fulfill the requirement or not(real online user traffic)
 
